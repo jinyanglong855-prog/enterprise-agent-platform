@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  管理后端常驻服务（切换检查单第③步的运行前提：REST 财务工具要 3210 一直在）。
+  崩溃自动拉起（KeepAlive）；开机自启（RunAtLoad）。
+
+  为什么指向 ~/.dsh/bin 而不是仓库：macOS 不给 launchd 后台进程「文稿」文件夹访问权，
+  指向 ~/Documents 里的脚本会 Operation not permitted（2026-10-26 实测）。
+  脚本唯一事实源在仓库 server/scripts/start-server.sh，安装 = 拷贝：
+    mkdir -p ~/.dsh/bin
+    cp server/scripts/start-server.sh ~/.dsh/bin/start-admin-server.sh
+
+  安装：
+    cp com.company.admin-server.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.company.admin-server.plist
+  验证：
+    launchctl list | grep admin-server
+    curl -s http://127.0.0.1:3210/api/auth/me -H "Authorization: Bearer <token>"
+  停止/维护（KeepAlive 会自动拉起，维护时先 unload）：
+    launchctl unload ~/Library/LaunchAgents/com.company.admin-server.plist
+  日志：/Users/YOUR_USER/.dsh/logs/admin-server.log
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.company.admin-server</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/YOUR_USER/.dsh/bin/start-admin-server.sh</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/YOUR_USER/.dsh/logs/admin-server.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/YOUR_USER/.dsh/logs/admin-server.log</string>
+</dict>
+</plist>

@@ -1,0 +1,38 @@
+{
+  "name": "company-admin-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "公司智能体管理系统后端（P1）：账本唯一事实源 + REST + RBAC + 审计。方案见 项目状态/决策区/2026-10-17 - 管理系统外层与Agent交互方案.md",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "npm run build && node --watch dist/src/main.js",
+    "start": "node dist/src/main.js",
+    "test": "npm run build && node --test --test-force-exit dist/test/*.test.js",
+    "postinstall": "npm rebuild better-sqlite3 2>/dev/null || true"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.2.1-rc.4",
+    "@deepseek-ai/dsh-sdk-protocol": "0.2.1-rc.4",
+    "@larksuiteoapi/node-sdk": "^1.76.0",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true
+  }
+}

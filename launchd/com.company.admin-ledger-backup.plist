@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  账本每日备份定时任务（方案 P1 随上线走）。
+  安装：
+    mkdir -p ~/.dsh/bin
+    cp ../server/scripts/backup-db.sh ~/.dsh/bin/backup-admin-ledger.sh
+    cp com.company.admin-ledger-backup.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.company.admin-ledger-backup.plist
+  （为什么拷到 ~/.dsh/bin：launchd 后台进程无「文稿」访问权，指到 ~/Documents 会
+    Operation not permitted，2026-10-26 实测；脚本唯一事实源在仓库 server/scripts/。）
+  验证：
+    launchctl list | grep admin-ledger
+    ls ~/.dsh/company-data/admin/backups/
+  卸载：
+    launchctl unload ~/Library/LaunchAgents/com.company.admin-ledger-backup.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.company.admin-ledger-backup</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/YOUR_USER/.dsh/bin/backup-admin-ledger.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>21</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/YOUR_USER/.dsh/logs/admin-backup.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/YOUR_USER/.dsh/logs/admin-backup.log</string>
+</dict>
+</plist>
